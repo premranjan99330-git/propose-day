@@ -23,22 +23,16 @@ body{
 
 .stage{
   width:100%;
-
-  /* key fix for phone */
   min-height:100vh;
-  height:auto;
 
   display:flex;
   flex-direction:column;
   align-items:center;
 
-  /* start from top so gallery never clips */
-  justify-content:flex-start;
-
-  padding:10px 0 60px 0;
+  /* centered on desktop, scrolls on phone */
+  justify-content:center;
 
   position:relative;
-  overflow-y:auto;
 }
 
 .hidden{
@@ -46,35 +40,77 @@ body{
 }
 
 
-/* ===== GALLERY FIXED ===== */
+/* ===================================================== */
+/*                RESPONSIVE GALLERY                     */
+/* ===================================================== */
 
 #gallery{
   display:flex;
-  gap:8px;
-
-  overflow-x:auto;
-  overflow-y:hidden;
+  gap:10px;
 
   width:100%;
-  max-width:100%;
-
-  padding:10px 6px;
-
-  scroll-snap-type:x mandatory;
-  -webkit-overflow-scrolling:touch;
+  padding:10px;
 }
 
-#gallery img{
-  scroll-snap-align:center;
+/* ----- DESKTOP: HORIZONTAL RIBBON ----- */
 
-  width:148px;        /* safe phone width */
-  flex-shrink:0;
+@media (min-width: 768px){
 
-  border-radius:14px;
+  #gallery{
+    flex-direction:row;
 
-  opacity:0;
-  transform:translateY(30px);
-  transition:1.2s;
+    overflow-x:auto;
+    overflow-y:hidden;
+
+    scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;
+
+    justify-content:center;
+  }
+
+  #gallery img{
+    width:180px;
+    flex-shrink:0;
+
+    scroll-snap-align:center;
+
+    border-radius:16px;
+
+    opacity:0;
+    transform:translateY(30px);
+    transition:1.2s;
+  }
+}
+
+/* ----- PHONE: VERTICAL STACK ----- */
+
+@media (max-width: 767px){
+
+  .stage{
+    justify-content:flex-start;
+    padding-top:12px;
+    overflow-y:auto;
+  }
+
+  #gallery{
+    flex-direction:column;
+
+    overflow-y:auto;
+    overflow-x:hidden;
+
+    align-items:center;
+  }
+
+  #gallery img{
+    width:86%;
+    max-width:320px;
+
+    border-radius:16px;
+
+    opacity:0;
+    transform:translateY(30px);
+    transition:1.2s;
+  }
 }
 
 
@@ -87,7 +123,6 @@ body{
   text-align:center;
   max-width:92%;
 
-  /* not fixed height anymore */
   min-height:60px;
 }
 
@@ -206,7 +241,7 @@ button{
 #letter{
   position:relative;
 
-  background:rgba(0,0,0,0.25);      /* glass */
+  background:rgba(0,0,0,0.25);
   backdrop-filter:blur(6px);
 
   border:1px solid rgba(255,255,255,0.18);
@@ -223,7 +258,7 @@ button{
 }
 
 
-/* ===== SOFT FOREVER EFFECT ===== */
+/* ===== FOREVER GLOW ===== */
 
 .soft{
   opacity:0.85;
@@ -237,11 +272,10 @@ button{
 }
 
 
-/* ===== FLOAT ANIM ===== */
+/* ===== FLOAT ANIMATION ===== */
 
 @keyframes float{
   0%{ transform:translateY(-4px); }
   50%{ transform:translateY(4px); }
   100%{ transform:translateY(-4px); }
 }
-
