@@ -1,13 +1,5 @@
-/* ----- BASE ----- */
-body{
-  font-family:
-    system-ui,
-    -apple-system,
-    "Segoe UI Emoji",
-    "Apple Color Emoji",
-    "Noto Color Emoji",
-    sans-serif;
-}
+/* ===== BASE ===== */
+
 *{
   box-sizing:border-box;
 }
@@ -16,21 +8,37 @@ body{
   margin:0;
   background:#07020f;
   color:white;
-  font-family:system-ui;
+
+  font-family:
+    system-ui,
+    -apple-system,
+    "Segoe UI Emoji",
+    "Apple Color Emoji",
+    "Noto Color Emoji",
+    sans-serif;
 }
+
+
+/* ===== STAGE LAYOUT ===== */
 
 .stage{
   width:100%;
-  min-height:100vh;          /* key change */
-  height:auto;               /* allow growth */
+
+  /* key fix for phone */
+  min-height:100vh;
+  height:auto;
 
   display:flex;
   flex-direction:column;
   align-items:center;
-  justify-content:flex-start; /* start from top */
 
-  padding-top:20px;
+  /* start from top so gallery never clips */
+  justify-content:flex-start;
+
+  padding:10px 0 60px 0;
+
   position:relative;
+  overflow-y:auto;
 }
 
 .hidden{
@@ -38,18 +46,31 @@ body{
 }
 
 
-/* ----- GALLERY ----- */
+/* ===== GALLERY FIXED ===== */
 
 #gallery{
   display:flex;
-  gap:10px;
+  gap:8px;
+
   overflow-x:auto;
-  padding:10px;
+  overflow-y:hidden;
+
+  width:100%;
+  max-width:100%;
+
+  padding:10px 6px;
+
+  scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;
 }
 
 #gallery img{
-  width:180px;
-  border-radius:16px;
+  scroll-snap-align:center;
+
+  width:148px;        /* safe phone width */
+  flex-shrink:0;
+
+  border-radius:14px;
 
   opacity:0;
   transform:translateY(30px);
@@ -57,25 +78,27 @@ body{
 }
 
 
-/* ----- TEXT ----- */
+/* ===== STORY TEXT ===== */
 
 #lines{
-  margin-top:20px;
-  font-size:20px;
-  text-align:center;
+  margin-top:16px;
+  font-size:18px;
 
-  max-width:90%;
-  height:70px;
+  text-align:center;
+  max-width:92%;
+
+  /* not fixed height anymore */
+  min-height:60px;
 }
 
 
-/* ----- CARD ----- */
+/* ===== CARD BASE ===== */
 
 .card{
   background:rgba(255,255,255,0.06);
   backdrop-filter:blur(10px);
 
-  padding:24px;
+  padding:22px;
   border-radius:20px;
 
   text-align:center;
@@ -84,20 +107,20 @@ body{
 }
 
 
-/* ----- BUTTONS ----- */
+/* ===== BUTTONS ===== */
 
 .btns{
   margin-top:16px;
 }
 
 button{
-  padding:12px 26px;
+  padding:14px 30px;
   margin:8px;
 
   border:none;
   border-radius:30px;
 
-  font-size:17px;
+  font-size:18px;
 }
 
 #yes{
@@ -111,7 +134,7 @@ button{
 }
 
 
-/* ----- CANVAS LAYERS ----- */
+/* ===== CANVAS LAYERS ===== */
 
 #starsLayer,
 #fireLayer{
@@ -128,7 +151,7 @@ button{
 }
 
 
-/* ----- MAGIC ELEMENTS ----- */
+/* ===== MAGIC ELEMENTS ===== */
 
 #gift{
   font-size:80px;
@@ -157,6 +180,9 @@ button{
   letter-spacing:2px;
 }
 
+
+/* ===== MISS MINE TEXT ===== */
+
 #nameStars{
   position:absolute;
   top:18%;
@@ -174,12 +200,44 @@ button{
   text-shadow:0 0 12px pink;
 }
 
-.soft{
-  opacity:0.8;
+
+/* ===== TRANSPARENT FINAL CARD ===== */
+
+#letter{
+  position:relative;
+
+  background:rgba(0,0,0,0.25);      /* glass */
+  backdrop-filter:blur(6px);
+
+  border:1px solid rgba(255,255,255,0.18);
+
+  z-index:12;
+
+  margin-top:40px;
 }
 
 
-/* ----- ANIMATIONS ----- */
+/* let fireworks breathe behind it */
+#stage-magic .card{
+  pointer-events:auto;
+}
+
+
+/* ===== SOFT FOREVER EFFECT ===== */
+
+.soft{
+  opacity:0.85;
+  animation:pulse 3s infinite;
+}
+
+@keyframes pulse{
+  0%{ opacity:0.7; }
+  50%{ opacity:1; }
+  100%{ opacity:0.7; }
+}
+
+
+/* ===== FLOAT ANIM ===== */
 
 @keyframes float{
   0%{ transform:translateY(-4px); }
