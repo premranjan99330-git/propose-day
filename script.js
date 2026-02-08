@@ -1,4 +1,6 @@
-// ---------- STAGES ----------
+// =====================
+// STAGES & ELEMENTS
+// =====================
 
 const gStage = document.getElementById("stage-gallery");
 const pStage = document.getElementById("stage-proposal");
@@ -9,21 +11,52 @@ const linesBox = document.getElementById("lines");
 const song = document.getElementById("song");
 
 
-// unlock audio on first touch
+// =====================
+// BGM – start in gallery only once
+// =====================
+
+let musicStarted = false;
+
+function startBGM(){
+  if(musicStarted) return;
+  musicStarted = true;
+
+  song.loop = true;
+  song.volume = 0.0;
+
+  song.play().then(()=>{
+
+    // slow sunrise for the ears
+    let v = 0;
+    let fade = setInterval(()=>{
+      v += 0.04;
+      song.volume = Math.min(v, 0.8);
+
+      if(v >= 0.8) clearInterval(fade);
+    },120);
+
+  }).catch(()=>{});
+}
+
+// touch or click anywhere in gallery wakes the music
+gStage.addEventListener("click", startBGM, { once:true });
+gStage.addEventListener("touchstart", startBGM, { once:true });
 
 
-// ---------- PICTURES ----------
+// =====================
+// GALLERY PHOTOS
+// =====================
 
 const pics = ["1.jpeg","2.jpeg","3.jpeg","4.jpeg","5.jpeg"];
 
-pics.forEach((p,i) => {
+pics.forEach((p,i)=>{
 
   let img = document.createElement("img");
   img.src = "pics/" + p;
 
   gallery.appendChild(img);
 
-  setTimeout(() => {
+  setTimeout(()=>{
     img.style.opacity = 1;
     img.style.transform = "translateY(0)";
   }, i * 1400);
@@ -31,13 +64,15 @@ pics.forEach((p,i) => {
 });
 
 
-// ---------- LINES ----------
+// =====================
+// STORY LINES
+// =====================
 
 const lines = [
- "Ek tumhe paake ar paana kya hai??",
- "Ek tumhe paake ar paana kya hai??",
- "M duniya chhod du ",
- "ye zamana kya hai??"
+ "Tumhe paake aur paana kya hai??.",
+ "Tumhe paake aur paana kya hai??",
+ "M ye duniyaa chhod duu",
+ "ye zamana kya haiii????"
 ];
 
 let i = 0;
@@ -49,80 +84,78 @@ function nextLine(){
   if(i < lines.length){
     type(lines[i]);
     i++;
-
     setTimeout(nextLine, 2600);
   }
   else{
     toProposal();
   }
-
 }
 
 function type(t){
 
   linesBox.innerHTML = "";
-
   let j = 0;
 
-  let k = setInterval(() => {
+  let k = setInterval(()=>{
 
     linesBox.innerHTML += t[j];
     j++;
 
-    if(j >= t.length)
-      clearInterval(k);
+    if(j >= t.length) clearInterval(k);
 
-  }, 38);
-
+  },38);
 }
 
 function toProposal(){
-
   gStage.classList.add("hidden");
   pStage.classList.remove("hidden");
-
-  song.play().catch(() => {});
-
 }
 
 
-// ---------- NO BUTTON ----------
+// =====================
+// NO BUTTON – escape artist
+// =====================
 
 const no = document.getElementById("no");
 
-no.onmouseenter = () => {
+function escapeNo(e){
+
+  e.preventDefault();
+  e.stopPropagation();
 
   no.style.position = "absolute";
 
-  no.style.left = Math.random()*70 + "%";
-  no.style.top  = Math.random()*70 + "%";
+  const maxX = window.innerWidth * 0.65;
+  const maxY = window.innerHeight * 0.55;
 
-};
+  no.style.left = Math.random()*maxX + "px";
+  no.style.top  = Math.random()*maxY + "px";
+}
 
-no.onclick = () => {
-  no.innerText = "destiny disagrees";
-};
+no.addEventListener("touchstart", escapeNo, {passive:false});
+no.addEventListener("touchmove",  escapeNo, {passive:false});
+no.addEventListener("mouseover",  escapeNo);
+no.addEventListener("click",      escapeNo);
 
 
-// ---------- YES ----------
+// =====================
+// YES BUTTON
+// =====================
 
 document.getElementById("yes").onclick = () => {
 
-  song.currentTime = 0;
-  song.play().catch(() => {});
-
+  // music already playing from gallery
   pStage.classList.add("hidden");
   mStage.classList.remove("hidden");
 
   startStars();
   showGift();
-
 };
 
 
-// =================================================
+// =====================
 // CANVAS SETUP
-// =================================================
+// =====================
 
 const starsCanvas = document.getElementById("starsLayer");
 const fireCanvas  = document.getElementById("fireLayer");
@@ -137,17 +170,18 @@ function resize(){
 
   fireCanvas.width   = window.innerWidth;
   fireCanvas.height  = window.innerHeight;
-
 }
 
 resize();
-
 window.addEventListener("resize", resize);
+window.addEventListener("orientationchange", ()=>{
+  setTimeout(resize,300);
+});
 
 
-// =================================================
+// =====================
 // STAR BACKGROUND
-// =================================================
+// =====================
 
 let stars = [];
 
@@ -155,8 +189,7 @@ function startStars(){
 
   stars = [];
 
-  for(let i=0; i<220; i++){
-
+  for(let i=0;i<220;i++){
     stars.push({
       x: Math.random()*starsCanvas.width,
       y: Math.random()*starsCanvas.height,
@@ -164,18 +197,16 @@ function startStars(){
       tx: Math.random()*starsCanvas.width,
       ty: Math.random()*starsCanvas.height
     });
-
   }
 
   animateStars();
-
 }
 
 function animateStars(){
 
   sctx.clearRect(0,0,starsCanvas.width,starsCanvas.height);
 
-  stars.forEach(p => {
+  stars.forEach(p=>{
 
     p.x += (p.tx - p.x) * 0.03;
     p.y += (p.ty - p.y) * 0.03;
@@ -189,25 +220,21 @@ function animateStars(){
   });
 
   requestAnimationFrame(animateStars);
-
 }
 
 
-// =================================================
+// =====================
 // REAL FIREWORKS
-// =================================================
+// =====================
 
 class Fire{
 
   constructor(){
-
     this.x = Math.random()*fireCanvas.width;
     this.y = fireCanvas.height;
 
     this.vy = -(6 + Math.random()*3);
-
     this.exploded = false;
-
   }
 
   update(){
@@ -221,9 +248,7 @@ class Fire{
       this.exploded = true;
       burst(this.x,this.y);
     }
-
   }
-
 }
 
 class Dot{
@@ -237,7 +262,6 @@ class Dot{
     this.vy = Math.random()*5 - 2.5;
 
     this.life = 90;
-
   }
 
   update(){
@@ -246,7 +270,6 @@ class Dot{
     this.y += this.vy;
 
     this.vy += 0.03;
-
     this.life--;
 
     fctx.beginPath();
@@ -256,19 +279,15 @@ class Dot{
       `hsl(${Math.random()*360},100%,60%)`;
 
     fctx.fill();
-
   }
-
 }
 
 let fires = [];
 let dots  = [];
 
 function burst(x,y){
-
   for(let i=0;i<70;i++)
     dots.push(new Dot(x,y));
-
 }
 
 function launch(){
@@ -280,75 +299,63 @@ function loop(){
   fctx.fillStyle = "rgba(0,0,0,0.2)";
   fctx.fillRect(0,0,fireCanvas.width,fireCanvas.height);
 
-  fires.forEach(f => f.update());
-  fires = fires.filter(f => !f.exploded);
+  fires.forEach(f=>f.update());
+  fires = fires.filter(f=>!f.exploded);
 
-  dots.forEach(d => d.update());
-  dots = dots.filter(d => d.life > 0);
+  dots.forEach(d=>d.update());
+  dots = dots.filter(d=>d.life>0);
 
   requestAnimationFrame(loop);
-
 }
 
 loop();
 
 
-// =================================================
-// SEQUENCE
-// =================================================
+// =====================
+// SEQUENCE AFTER YES
+// =====================
 
 function showGift(){
 
   const gift = document.getElementById("gift");
   gift.classList.remove("hidden");
 
-  gift.onclick = () => {
-    gift.style.display = "none";
+  gift.onclick = ()=>{
+    gift.style.display="none";
     revealRing();
   };
-
 }
 
 function revealRing(){
 
   const ring = document.getElementById("ring");
-
-  ring.innerHTML =
-    "💍<div class='forever'>Forever?</div>";
-
   ring.classList.remove("hidden");
 
-  setTimeout(() => {
-    ring.style.transform = "scale(1)";
+  setTimeout(()=>{
+    ring.style.transform="scale(1)";
   },100);
 
-
-  setTimeout(() => {
+  setTimeout(()=>{
 
     document
       .getElementById("nameStars")
       .classList.remove("hidden");
 
-    setTimeout(() => {
-      document.getElementById("nameStars").style.opacity = 1;
+    setTimeout(()=>{
+      document.getElementById("nameStars").style.opacity=1;
     },100);
 
   },1600);
 
-
-  setTimeout(() => {
-
-    setInterval(launch, 900);
+  setTimeout(()=>{
+    setInterval(launch,1500);   // calm mobile sky
     showLetter();
-
   },3200);
-
 }
 
 function showLetter(){
-
   document
     .getElementById("letter")
     .classList.remove("hidden");
-
 }
+
