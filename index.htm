@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>For Miss Mine</title>
+<link rel="stylesheet" href="style.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+
+<audio id="song" src="song.mp3.mp3" preload="auto"></audio>
+
+<!-- GALLERY -->
+<section id="stage-gallery" class="stage">
+   <div id="gallery"></div>
+   <div id="lines"></div>
+</section>
+
+<!-- PROPOSAL -->
+<section id="stage-proposal" class="stage hidden">
+   <div class="card">
+      <h1>Miss Mine… will you be mine?</h1>
+
+      <div class="btns">
+        <button id="yes">YES</button>
+        <button id="no">NO</button>
+      </div>
+   </div>
+</section>
+
+<!-- MAGIC -->
+<section id="stage-magic" class="stage hidden">
+
+   <canvas id="starsLayer"></canvas>
+   <canvas id="fireLayer"></canvas>
+
+   <div id="gift" class="hidden">🎁</div>
+
+   <div id="ring" class="hidden">
+  <svg viewBox="0 0 100 60" width="80">
+    <circle cx="50" cy="30" r="18"
+      stroke="#ffd700" stroke-width="6" fill="none"/>
+    <circle cx="62" cy="22" r="6" fill="#fff8b3"/>
+  </svg>
+  <div class="forever">Forever?</div>
+</div>
+
+   <div id="nameStars" class="hidden">MISS MINE</div>
+
+   <div id="letter" class="hidden card">
+     <h2>You clicked YES and my heart jumped off happiness</h2>
+
+     <p>I might not give you a perfect story, but I promise to be in every chapter.</p>
+
+     <p class="soft">Forever?</p>
+
+     <p class="soft">Moi tumak bohut besii bhal pau ❤ </p>
+   </div>
+
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>
