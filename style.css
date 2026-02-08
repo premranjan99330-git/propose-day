@@ -21,13 +21,15 @@ body{
 
 .stage{
   width:100%;
-  height:100vh;
+  min-height:100vh;          /* key change */
+  height:auto;               /* allow growth */
 
   display:flex;
   flex-direction:column;
   align-items:center;
-  justify-content:center;
+  justify-content:flex-start; /* start from top */
 
+  padding-top:20px;
   position:relative;
 }
 
@@ -184,3 +186,4 @@ button{
   50%{ transform:translateY(4px); }
   100%{ transform:translateY(-4px); }
 }
+
